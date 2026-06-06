@@ -1,0 +1,5 @@
+.env
+.states/
+__pycache__/
+.web/
+*.pyc
