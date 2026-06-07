@@ -36,10 +36,7 @@ SkillGap AI is built to close that gap. It reads your actual resume and gives yo
 ## Demo Video
 
 > 📹 Watch the demo to see SkillGap AI in action — from uploading a resume to receiving the full career report.
-
-> ```markdown
-> [![Watch the demo](assets/Demo_Video.mov)]
-> ```
+![Watch the demo](assets/Demo_Video.mov)
 
 ---
 
