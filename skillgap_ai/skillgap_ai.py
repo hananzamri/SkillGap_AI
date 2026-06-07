@@ -248,11 +248,68 @@ def loading_state() -> rx.Component:
         rx.center(
             rx.vstack(
                 rx.spinner(color=PRIMARY, size="3"),
-                rx.text("Analyzing your resume…",
-                        color=TEXT_MUTED, font_size="14px"),
-                align="center", spacing="3",
+                rx.text(
+                    "Analyzing your resume...",
+                    font_size="15px",
+                    font_weight="600",
+                    color=TEXT_MAIN,
+                ),
+                rx.text(
+                    "This may take a few seconds. Please wait.",
+                    font_size="13px",
+                    color=TEXT_MUTED,
+                ),
+                align="center",
+                spacing="2",
             ),
             padding="60px",
+        ),
+    )
+
+# ── Uploaded Card ───────────────────────────────────────────────────
+def uploaded_card() -> rx.Component:
+    return rx.cond(
+        State.file_uploaded,
+        rx.box(
+            rx.hstack(
+                rx.vstack(
+                    rx.text(State.resume_filename, font_weight="600", font_size="14px"),
+                    rx.text("Ready to analyze", font_size="12px", color=TEXT_MUTED),
+                    spacing="1",
+                    align="start",
+                ),
+                rx.spacer(),
+                rx.button(
+                    "Remove",
+                    on_click=State.reset_all,
+                    background="transparent",
+                    color=TEXT_MUTED,
+                    border=f"1px solid {BORDER}",
+                    font_size="12px",
+                ),
+                align="center",
+            ),
+            padding="14px",
+            border=f"1.5px solid {PRIMARY}",
+            border_radius="12px",
+            background=PRIMARY_SOFT,
+            width="100%",
+        ),
+    )
+
+# ── Analyze Button ─────────────────────────────────────────────────
+def analyze_button() -> rx.Component:
+    return rx.cond(
+        State.file_uploaded & ~State.loading,
+        rx.button(
+            "Analyze Resume",
+            on_click=State.start_analysis,
+            background=PRIMARY,
+            color="white",
+            padding="10px 18px",
+            border_radius="10px",
+            width="100%",
+            _hover={"background": "#1D4ED8"},
         ),
     )
 
@@ -293,26 +350,41 @@ def index() -> rx.Component:
                     ),
                     width="100%",
                 ),
-
-                # upload zone (hidden while loading or after analysis)
                 rx.cond(
                     ~State.analyzed & ~State.loading,
                     rx.vstack(
                         upload_zone(),
+
+                        uploaded_card(),
+
+                        analyze_button(),
+
                         rx.cond(
                             State.error != "",
                             rx.text(
-                                State.error, color=DANGER, font_size="13px",
-                                padding="8px 12px", background="#FEF2F2",
-                                border_radius="6px", width="100%",
+                                State.error,
+                                color=DANGER,
+                                font_size="13px",
+                                padding="8px 12px",
+                                background="#FEF2F2",
+                                border_radius="6px",
+                                width="100%",
                             ),
                         ),
-                        spacing="3", width="100%",
+                        spacing="3",
+                        width="100%",
                     ),
                 ),
 
-                loading_state(),
-                report_panel(),
+                rx.cond(
+                    State.loading,
+                    loading_state(),
+                    rx.cond(
+                        State.analyzed,
+                        report_panel(),
+                        None
+                    )
+                ),
 
                 spacing="5", width="100%", max_width="820px",
                 padding="32px 24px",

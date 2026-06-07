@@ -1,6 +1,7 @@
 import reflex as rx
 import io
 import re
+import asyncio
 import PyPDF2
 
 from skillgap_ai.api import analyze_career
@@ -75,6 +76,7 @@ class State(rx.State):
     score: int = 0
 
     loading: bool = False
+    file_uploaded: bool = False
     error: str = ""
     analyzed: bool = False
 
@@ -87,6 +89,8 @@ class State(rx.State):
         self.error = ""
         file = files[0]
         self.resume_filename = file.filename
+        self.file_uploaded = True
+
         file_data = await file.read()
 
         try:
@@ -101,22 +105,28 @@ class State(rx.State):
             self.error = "PDF appears to be empty or unreadable."
             return
 
-        await self.run_analysis()
-
     # ── AI Analysis ───────────────────────────────────────────
-
     async def run_analysis(self):
         self.loading = True
         self.analyzed = False
         self.error = ""
 
+        await asyncio.sleep(0.05)  # 🔥 CRITICAL FIX (forces UI refresh)
+
         try:
-            raw = analyze_career(self.resume_text, self.location)
+            raw = await asyncio.to_thread(
+                analyze_career,
+                self.resume_text,
+                self.location
+            )
+
             self.raw_result = raw
             self._parse_report(raw)
             self.analyzed = True
+
         except Exception as e:
             self.error = f"Analysis failed: {e}"
+
         finally:
             self.loading = False
 
@@ -144,6 +154,13 @@ class State(rx.State):
 
     def set_location(self, value: str):
         self.location = value
+    
+    async def start_analysis(self):
+        self.loading = True
+        self.analyzed = False
+        yield
+
+        await self.run_analysis()
 
     def reset_all(self):
         self.resume_text     = ""
@@ -158,3 +175,4 @@ class State(rx.State):
         self.loading         = False
         self.error           = ""
         self.analyzed        = False
+        self.file_uploaded   = False
