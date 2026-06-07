@@ -404,5 +404,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 ```
 
 ---
-
-*Built with Python, Reflex, and Claude AI — for students who deserve better career guidance than a generic checklist.*
+**Nur Hanan Mohammad Zamri**  
+Artificial Intelligence & Data Science — Sejong University  
+[linkedin.com/in/nurhanan](https://linkedin.com/in/nurhanan)
