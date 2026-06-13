@@ -65,7 +65,7 @@ Resume:
 
     response = client.chat.completions.create(
         model="anthropic/claude-3.5-haiku",
-        max_tokens=900,
+        max_tokens=600,
         messages=[{"role": "user", "content": prompt}]
     )
 
