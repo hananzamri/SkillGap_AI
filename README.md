@@ -69,28 +69,9 @@ A spinner appears while Claude reads your resume and generates the report. This 
 The score ring fills to your readiness percentage. The other card shown the AI evaluation, work as your personal career conselor.
 
 ---
+## Workflow Diagram
 
-## How It Works
-
-```
-You type your city
-        +
-You upload your resume PDF
-        ↓
-PyPDF2 extracts all text from every page
-        ↓
-Resume text + location sent to Claude 3.5 Haiku via OpenRouter
-        ↓
-Claude generates a structured career report
-        ↓
-Regex parser splits the report into 6 sections
-        ↓
-Reflex updates the UI with your results
-        ↓
-Score · Advice · Roles · Gaps · Learning Path · Job Suggestions
-```
-
-Nothing is stored. Your resume text lives in memory for the duration of your session. Close the tab and it's gone.
+![Workflow Diagram](assets/diagram.png)
 
 ---
 
